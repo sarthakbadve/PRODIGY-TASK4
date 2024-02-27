@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" type="text/css" href="styles.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="tile.js"></script>
+        <script src="sudokuGrid.js"></script>
+        <script src="utils.js"></script>
+        <title>JS Sudoku Solver</title>
+    </head>
+
+    <body>
+
+        <div id="flex-space">
+
+            <div id="loadmodal" class="modal">
+                <div class="modalcontent">
+                    <div class="modalheader">
+                        <span class="modalclose" onclick="closeModals()">&times;</span>
+                        <h2>Load Sudoku</h2>
+                    </div>
+                    <div class="modalbody">
+                        <p>Enter Sudoku data below:</p>
+                        <textarea onfocus="this.select()" id="loadtext" placeholder="JSON (array of 9 arrays, each of length 9) or numeric (number 0-9 for each square)" autofocus></textarea>
+                        <button type="button" class="loadbtn" onclick="getinput()">Load</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="exportmodal" class="modal">
+                <div class="modalcontent">
+                    <div class="modalheader">
+                        <span class="modalclose" onclick="closeModals()">&times;</span>
+                        <h2>Export Sudoku</h2>
+                    </div>
+                    <div class="modalbody">
+                        <div id="expmodalbody">
+                            <div class="itemcol">
+                                <p>Image:</p>
+                                <img src="" id="imgexport" alt="Image of Sudoku puzzle">
+                            </div>
+                            <div class="itemcol">
+                                <p>JSON:</p>
+                                <textarea onfocus="this.select()" id="jsonexport"></textarea>
+                            </div>
+                            <div class="itemcol">
+                                <p>Numeric:</p>
+                                <textarea onfocus="this.select()" id="numericexport"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="output">
+                <canvas id="myCanvas" width="900" height="900"></canvas>
+            </div>
+            <div id="controllers">
+                <h1>JS Sudoku Solver</h1>
+                <p class="centerme">Some importable Sudokus <a href="https://www.kaggle.com/bryanpark/sudoku" target="_blank">on Kaggle</a></p>
+                <div class="itemrow centerme">
+                    <p>Status:&nbsp;</p>
+                    <p id="status"></p>
+                </div>
+                <div id="buttons">
+                    <div class="itemrow">
+                        <button type="button" id="solvebtn" onclick="solve()">Solve</button>
+                        <button type="button" id="stopbtn" onclick="stop(false)" disabled>Stop</button>
+                    </div>
+                    <div class="itemrow">
+                        <button type="button" id="loadbtn" class="loadbtn" onclick="loadgrid()">Import</button>
+                        <button type="button" id="exportbtn" class="exportbtn" onclick="exportgrid()">Export</button>
+                    </div>
+                    <div class="itemrow">
+                        <button type="button" id="clearbtn" onclick="clearattempt()" disabled>Clear attempt</button>
+                    </div>
+                    <div class="itemrow">
+                        <button type="button" id="clearallbtn" onclick="clearall()">Clear all</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // TODO:
+            //   - Refactor isValid Fx in grid class - does it really need to process each box individually?
+            //   - Find next solution (find all solutions?)
+            //   - Generate new sudoku?
+
+           
+
+            // PROGRAM ENTRY POINT HERE -----------
+            var canv = document.getElementById("myCanvas");
+            var ctx = canv.getContext("2d");
+            var cellSize = canv.width / 9;
+
+            var master = new SudokuGrid;
+
+            var routeStack;
+            var selectedIndex;
+            var backtracking;
+            initialise(true);
+
+            var repeater;
+
+            loadInitial();
+
+            master.render();
+
+            // When the user clicks anywhere outside of a the modal, close it
+            // This can be commented out to force manual modal close
+            window.onclick = function(event) {
+                if ((event.target == document.getElementById("exportmodal")) || (event.target == document.getElementById("loadmodal"))) {
+                    closeModals();
+                }
+            }
+
+        </script>
+    </body>
